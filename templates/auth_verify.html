@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<h2>Подтверждение телефона</h2>
+<p>Мы отправили код на {{ phone }}.</p>
+<form class="form" method="post">
+  <label>Код<input name="code" pattern="\d{6}" placeholder="6 цифр" required></label>
+  <button class="btn">Подтвердить</button>
+</form>
+{% endblock %}

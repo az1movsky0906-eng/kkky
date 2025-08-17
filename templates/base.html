@@ -1,0 +1,33 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><title>{{ APP_TITLE }}</title><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head><body>
+<header class="topbar">
+  <a class="logo" href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='logo/' ~ (logo_file or 'logo.png')) }}" alt="logo">
+    <span>{{ APP_TITLE }}</span>
+  </a>
+  <nav>
+    <a href="{{ url_for('index') }}">Каталог</a>
+    {% if user %}
+      <a href="{{ url_for('add_listing') }}">Добавить</a>
+      <a href="{{ url_for('profile') }}">Профиль</a>
+      <a href="{{ url_for('logout') }}">Выход</a>
+    {% else %}
+      <a href="{{ url_for('auth_start') }}">Вход</a>
+    {% endif %}
+    <a href="{{ url_for('admin_dashboard') }}">Админ</a>
+  </nav>
+</header>
+{% if top_banner and top_banner['enabled'] %}
+<div class="banner"><a href="{{ top_banner['url'] or '#' }}"><img src="{{ url_for('static', filename='banners/' ~ top_banner['image']) }}"></a></div>
+{% endif %}
+<main class="container">
+  {% with m=get_flashed_messages() %}{% if m %}<div class="flash">{% for x in m %}<div>{{ x }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+  {% block content %}{% endblock %}
+</main>
+{% if bottom_banner and bottom_banner['enabled'] %}
+<div class="banner"><a href="{{ bottom_banner['url'] or '#' }}"><img src="{{ url_for('static', filename='banners/' ~ bottom_banner['image']) }}"></a></div>
+{% endif %}
+<footer class="footer">© {{ APP_TITLE }}</footer>
+</body></html>

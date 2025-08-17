@@ -1,0 +1,70 @@
+{% extends "base.html" %}{% block content %}
+<h2>Админ-панель</h2>
+<div class="cards">
+  <div class="stat">Пользователи: <b>{{ counts.users }}</b></div>
+  <div class="stat">Товары: <b>{{ counts.listings }}</b></div>
+  <div class="stat">Бренды: <b>{{ counts.brands }}</b></div>
+  <div class="stat">Категории: <b>{{ counts.categories }}</b></div>
+</div>
+
+<h3>Настройки сайта</h3>
+<form method="post" action="{{ url_for('admin_settings') }}" enctype="multipart/form-data">
+  <label>Название сайта<input name="site_title" value="{{ settings.get('site_title','СпецТех') }}"></label>
+  <label class="row"><input type="checkbox" name="whatsapp_global" {% if settings.get('whatsapp_global')=='1' %}checked{% endif %}> Показать кнопки WhatsApp</label>
+  <label class="row"><input type="checkbox" name="allow_calls" {% if settings.get('allow_calls')=='1' %}checked{% endif %}> Показать кнопки «Позвонить»</label>
+  <label>Логотип (png/jpg)<input type="file" name="logo" accept=".png,.jpg,.jpeg,.webp"></label>
+  <button class="btn">Сохранить</button>
+</form>
+
+<h3>Баннеры</h3>
+<div class="grid grid2">
+  <div>
+    <h4>Верхний</h4>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('admin_banner', pos='top') }}">
+      <label class="row"><input type="checkbox" name="enabled" {% if top and top['enabled'] %}checked{% endif %}> Включить</label>
+      <label>Ссылка <input name="url" value="{{ top['url'] if top else '' }}"></label>
+      <label>Картинка <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp"></label>
+      {% if top and top['image'] %}<img src="{{ url_for('static', filename='banners/' ~ top['image']) }}" style="max-width:230px">{% endif %}
+      <button class="btn">Сохранить</button>
+    </form>
+  </div>
+  <div>
+    <h4>Нижний</h4>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('admin_banner', pos='bottom') }}">
+      <label class="row"><input type="checkbox" name="enabled" {% if bottom and bottom['enabled'] %}checked{% endif %}> Включить</label>
+      <label>Ссылка <input name="url" value="{{ bottom['url'] if bottom else '' }}"></label>
+      <label>Картинка <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp"></label>
+      {% if bottom and bottom['image'] %}<img src="{{ url_for('static', filename='banners/' ~ bottom['image']) }}" style="max-width:230px">{% endif %}
+      <button class="btn">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<h3>Бренды и Категории</h3>
+<div class="grid grid2">
+  <form method="post" action="{{ url_for('admin_brand_add') }}">
+    <label>Новый бренд<input name="brand_name"></label>
+    <button class="btn">Добавить бренд</button>
+  </form>
+  <form method="post" action="{{ url_for('admin_category_add') }}">
+    <label>Новая категория<input name="category_name"></label>
+    <button class="btn">Добавить категорию</button>
+  </form>
+</div>
+
+<h3>Последние товары</h3>
+<table class="tbl">
+  <tr><th>ID</th><th>Название</th><th>Бренд</th><th>Категория</th><th>Цена</th><th></th></tr>
+  {% for l in listings %}
+    <tr>
+      <td>{{ l.id }}</td><td>{{ l.title }}</td><td>{{ l.brand or '—' }}</td><td>{{ l.cat or '—' }}</td><td>{{ '%.0f'|format(l.price or 0) }}</td>
+      <td>
+        <a class="btn light" href="{{ url_for('edit_listing', lid=l.id) }}">Изм.</a>
+        <form style="display:inline" method="post" action="{{ url_for('admin_delete_listing', lid=l.id) }}" onsubmit="return confirm('Удалить?')">
+          <button class="btn">Удалить</button>
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

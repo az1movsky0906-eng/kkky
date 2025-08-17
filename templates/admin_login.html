@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<h2>Вход в админку</h2>
+<form class="form" method="post">
+  <label>Логин<input name="login" required></label>
+  <label>Пароль<input name="password" type="password" required></label>
+  <button class="btn">Войти</button>
+</form>
+{% endblock %}

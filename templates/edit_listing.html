@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block content %}
+<h2>Редактировать товар #{{ r['id'] }}</h2>
+<form class="form" method="post" enctype="multipart/form-data">
+  <label>Название<input name="title" value="{{ r['title'] }}" required></label>
+  <label>Описание<textarea name="description" rows="4">{{ r['description'] }}</textarea></label>
+  <div class="row">
+    <label>Бренд<select name="brand_id"><option value="">—</option>{% for b in brands %}<option value="{{ b['id'] }}" {% if r['brand_id']==b['id'] %}selected{% endif %}>{{ b['name'] }}</option>{% endfor %}</select></label>
+    <label>Категория<select name="category_id"><option value="">—</option>{% for c in categories %}<option value="{{ c['id'] }}" {% if r['category_id']==c['id'] %}selected{% endif %}>{{ c['name'] }}</option>{% endfor %}</select></label>
+  </div>
+  <label>Цена<input name="price" type="number" step="1" min="0" value="{{ r['price'] or 0 }}"></label>
+  <label>Фото (если нужно заменить)<input type="file" name="image" accept=".png,.jpg,.jpeg,.webp"></label>
+  <label>Телефон для звонка<input name="seller_phone" value="{{ r['seller_phone'] or '' }}" placeholder="+992..."></label>
+  <label class="row"><input type="checkbox" name="call_enabled" {% if r['call_enabled']==1 %}checked{% endif %}> Показывать «Позвонить»</label>
+  <label class="row"><input type="checkbox" name="whatsapp_enabled" {% if r['whatsapp_enabled']==1 %}checked{% endif %}> Показывать WhatsApp</label>
+  <button class="btn" type="submit">Сохранить</button>
+</form>
+{% endblock %}

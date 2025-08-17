@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<h2>Вход / Регистрация</h2>
+<form class="form" method="post">
+  <label>Телефон<input name="phone" placeholder="+992..." required></label>
+  <button class="btn">Получить код</button>
+</form>
+<div class="muted">Демо: код записывается в файл <b>last_otp.txt</b> рядом с приложением.</div>
+{% endblock %}
